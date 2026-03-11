@@ -1,4 +1,4 @@
-package com.learnkafka.library_producer.domain;
+package com.learnkafka.domain;
 
 
 public record BookDTO(Integer bookId, String bookName, String bookAuthor) {

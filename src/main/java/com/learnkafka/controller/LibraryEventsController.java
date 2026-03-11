@@ -1,7 +1,7 @@
-package com.learnkafka.library_producer.controller;
+package com.learnkafka.controller;
 
-import com.learnkafka.library_producer.domain.LibraryEventDTO;
-import com.learnkafka.library_producer.producer.LiveEventsProducer;
+import com.learnkafka.domain.LibraryEventDTO;
+import com.learnkafka.producer.LiveEventsProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +26,8 @@ public class LibraryEventsController {
         log.info("libraryEvent: {}", libraryEventDTO);
 
         // invoke kafka producer
-        liveEventsProducer.sendLibraryEvent_asynchApproach1(libraryEventDTO);
+        //liveEventsProducer.sendLibraryEvent_asynchApproach1(libraryEventDTO);
+        liveEventsProducer.sendLibraryEvent_asynchApproach2(libraryEventDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(libraryEventDTO);
     }

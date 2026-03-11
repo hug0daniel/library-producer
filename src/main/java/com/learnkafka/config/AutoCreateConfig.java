@@ -1,4 +1,4 @@
-package com.learnkafka.library_producer.config;
+package com.learnkafka.config;
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,11 +1,9 @@
-package com.learnkafka.library_producer.producer;
+package com.learnkafka.producer;
 
-import com.learnkafka.library_producer.domain.LibraryEventDTO;
+import com.learnkafka.domain.LibraryEventDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.internals.RecordHeader;
-import org.apache.kafka.common.protocol.types.Field;
-import org.osgi.annotation.bundle.Header;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
@@ -80,10 +78,10 @@ public class LiveEventsProducer {
         return new ProducerRecord<>(topic,key,value);
     }
     // testing messages
-    private ProducerRecord<Integer, String > buildProducerRecord_withHeaders(Integer key, String value) {
-        List<RecordHeader> recordHeaders = List.of(new RecordHeader("event-source","scanner".getBytes()));
-        return new ProducerRecord<>(topic,null,key,value,recordHeaders);
-    }
+//    private ProducerRecord<Integer, String > buildProducerRecord_withHeaders(Integer key, String value) {
+//        List<RecordHeader> recordHeaders = List.of(new RecordHeader("event-source","scanner".getBytes()));
+//        return new ProducerRecord<>(topic,null,key,value,recordHeaders);
+//    }
 
     //Synch approach with the .get();
     public SendResult<Integer, String> sendLibraryEvent_synchApproach(LibraryEventDTO libraryEventDTO) throws ExecutionException, InterruptedException, TimeoutException {
