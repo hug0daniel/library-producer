@@ -31,6 +31,8 @@ class LibraryEventsControllerIntegrationTest {
         this.restTestClient = RestTestClient.bindToApplicationContext(context).build();
     }
 
+    //TODO: test with a kafkaConsumer
+
     @Test
     void postLibraryEvent() {
         // given
@@ -49,21 +51,4 @@ class LibraryEventsControllerIntegrationTest {
                     // mais asserts se quiseres
                 });
     }
-
-//    @Test
-//    void postLibraryEvent(){
-//
-//        //given
-//        HttpHeaders httpHeaders = new HttpHeaders();
-//        httpHeaders.set("content-type", MediaType.APPLICATION_JSON.toString());
-//
-//        var httpEntity = new HttpEntity<>(TestUtil.libraryEventRecord(),httpHeaders);
-//
-//        //when
-//        var resposnseEntity = restTemplate
-//                .exchange("/v1/libraryevent", HttpMethod.POST,httpEntity, LibraryEventDTO.class);
-//
-//        //then
-//        assertEquals(HttpStatus.CREATED,resposnseEntity.getStatusCode());
-//    }
 }
