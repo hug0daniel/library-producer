@@ -1,66 +1,69 @@
 package com.learnkafka.util;
 
-import com.learnkafka.domain.BookDTO;
-import com.learnkafka.domain.LibraryEventDTO;
+import com.learnkafka.domain.Book;
+import com.learnkafka.domain.LibraryEvent;
 import com.learnkafka.domain.EventType;
-import tools.jackson.databind.ObjectMapper;
 
 public class TestUtil {
 
-    public static BookDTO bookRecord(){
+    public static Book bookRecord(){
 
-        return new BookDTO(123, "Dilip","Kafka Using Spring Boot" );
+        return new Book(123, "Dilip","Kafka Using Spring Boot" );
     }
 
-    public static BookDTO bookRecordWithInvalidValues(){
+    public static Book bookRecordWithInvalidValues(){
 
-        return new BookDTO(null, "","Kafka Using Spring Boot" );
+        return new Book(null, "","Kafka Using Spring Boot" );
     }
 
-    public static LibraryEventDTO libraryEventRecord(){
+    public static LibraryEvent libraryEventRecord(){
 
         return
-                new LibraryEventDTO(null,
+                new LibraryEvent(null,
                         EventType.NEW,
                         bookRecord());
     }
 
-    public static LibraryEventDTO newLibraryEventRecordWithLibraryEventId(){
+    public static LibraryEvent libraryEventRecordWithInvalidBook(){
 
         return
-                new LibraryEventDTO(123,
-                        EventType.NEW,
-                        bookRecord());
-    }
-
-    public static LibraryEventDTO libraryEventRecordUpdate(){
-
-        return
-                new LibraryEventDTO(123,
-                        EventType.UPDATE,
-                        bookRecord());
-    }
-
-    public static LibraryEventDTO libraryEventRecordUpdateWithNullLibraryEventId(){
-
-        return
-                new LibraryEventDTO(null,
-                        EventType.UPDATE,
-                        bookRecord());
-    }
-
-    public static LibraryEventDTO libraryEventRecordWithInvalidBook(){
-
-        return
-                new LibraryEventDTO(null,
+                new LibraryEvent(null,
                         EventType.NEW,
                         bookRecordWithInvalidValues());
     }
 
-    public static LibraryEventDTO parseLibraryEventRecord(ObjectMapper objectMapper , String json){
 
-        return  objectMapper.readValue(json, LibraryEventDTO.class);
+/**
+ * Methods bellow will be used later on
+    public static LibraryEvent newLibraryEventRecordWithLibraryEventId(){
+
+        return
+                new LibraryEvent(123,
+                        EventType.NEW,
+                        bookRecord());
+    }
+
+    public static LibraryEvent libraryEventRecordUpdate(){
+
+        return
+                new LibraryEvent(123,
+                        EventType.UPDATE,
+                        bookRecord());
+    }
+
+    public static LibraryEvent libraryEventRecordUpdateWithNullLibraryEventId(){
+
+        return
+                new LibraryEvent(null,
+                        EventType.UPDATE,
+                        bookRecord());
+    }
+
+    public static LibraryEvent parseLibraryEventRecord(ObjectMapper objectMapper , String json){
+
+        return  objectMapper.readValue(json, LibraryEvent.class);
 
 
     }
+ **/
 }

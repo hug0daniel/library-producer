@@ -1,15 +1,13 @@
 package com.learnkafka.controller;
 
 import com.learnkafka.domain.EventType;
-import com.learnkafka.domain.LibraryEventDTO;
+import com.learnkafka.domain.LibraryEvent;
 import com.learnkafka.producer.LiveEventsProducer;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.IllegalFormatCodePointException;
 
 @RestController
 @Slf4j
@@ -23,32 +21,32 @@ public class LibraryEventsController {
 
 
     @PostMapping("/v1/libraryevent")
-    public ResponseEntity<LibraryEventDTO> postLibraryEvent(@RequestBody @Valid LibraryEventDTO libraryEventDTO) {
-        liveEventsProducer.sendLibraryEvent_asynchApproach2(libraryEventDTO);
+    public ResponseEntity<LibraryEvent> postLibraryEvent(@RequestBody @Valid LibraryEvent libraryEvent) {
+        liveEventsProducer.sendLibraryEvent_asynchApproach2(libraryEvent);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(libraryEventDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(libraryEvent);
     }
 
     @PutMapping("/v1/libraryevent")
-    public ResponseEntity<?> updateLibraryEvent(@RequestBody @Valid LibraryEventDTO libraryEventDTO) {
+    public ResponseEntity<?> updateLibraryEvent(@RequestBody @Valid LibraryEvent libraryEvent) {
 
         //Initial request validation
-        ResponseEntity<String> badRequest = validateLibraryEvent(libraryEventDTO);
+        ResponseEntity<String> badRequest = validateLibraryEvent(libraryEvent);
 
         if (badRequest != null) return  badRequest;
 
-        liveEventsProducer.sendLibraryEvent_asynchApproach2(libraryEventDTO);
+        liveEventsProducer.sendLibraryEvent_asynchApproach2(libraryEvent);
 
-        return ResponseEntity.status(HttpStatus.OK).body(libraryEventDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(libraryEvent);
     }
 
-    public ResponseEntity<String> validateLibraryEvent(LibraryEventDTO libraryEventDTO) {
+    public ResponseEntity<String> validateLibraryEvent(LibraryEvent libraryEvent) {
 
-        if (libraryEventDTO.libraryEventId() == null ){
+        if (libraryEvent.libraryEventId() == null ){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please pass the library event ID");
         }
 
-        if (!libraryEventDTO.libraryEventType().equals(EventType.UPDATE)){
+        if (!libraryEvent.libraryEventType().equals(EventType.UPDATE)){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Only UPDATE Event Type is supported");
         }
         return null;

@@ -1,20 +1,15 @@
 package com.learnkafka.producer;
 
-import com.learnkafka.domain.LibraryEventDTO;
+import com.learnkafka.domain.LibraryEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.common.header.internals.RecordHeader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.ObjectMapper;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 @Component
 @Slf4j
@@ -32,10 +27,10 @@ public class LiveEventsProducer {
     }
 
     // Async approach with .send(); (Most realistic approach in real live services)
-    public CompletableFuture<SendResult<Integer, String>> sendLibraryEvent_asynchApproach1(LibraryEventDTO libraryEventDTO){
+    public CompletableFuture<SendResult<Integer, String>> sendLibraryEvent_asynchApproach1(LibraryEvent libraryEvent){
 
-        var key= libraryEventDTO.libraryEventId();
-        var value = objectMapper.writeValueAsString(libraryEventDTO);
+        var key= libraryEvent.libraryEventId();
+        var value = objectMapper.writeValueAsString(libraryEvent);
 
         // If this is the 1st call ever to the cluster: will happen blocking call - to get metadata about the kafka cluster
         // 2- Send message happens - Returns a Completable Future
@@ -52,10 +47,10 @@ public class LiveEventsProducer {
         });
     }
 
-    public CompletableFuture<SendResult<Integer, String>> sendLibraryEvent_asynchApproach2(LibraryEventDTO libraryEventDTO){
+    public void sendLibraryEvent_asynchApproach2(LibraryEvent libraryEvent){
 
-        var key= libraryEventDTO.libraryEventId();
-        var value = objectMapper.writeValueAsString(libraryEventDTO);
+        var key= libraryEvent.libraryEventId();
+        var value = objectMapper.writeValueAsString(libraryEvent);
 
 
         ProducerRecord<Integer,String> record = buildProducerRecord(key,value);
@@ -65,7 +60,7 @@ public class LiveEventsProducer {
 
         var completableFuture = kafkaTemplate.send(record);
 
-        return completableFuture.whenComplete((sendResult,throwable) ->{
+         completableFuture.whenComplete((sendResult,throwable) ->{
             if(throwable != null) {
                 handleFailure(key,value,throwable);
             } else {
@@ -84,10 +79,10 @@ public class LiveEventsProducer {
 //    }
 
     //Synch approach with the .get();
-    public SendResult<Integer, String> sendLibraryEvent_synchApproach(LibraryEventDTO libraryEventDTO) throws ExecutionException, InterruptedException, TimeoutException {
+    /*public SendResult<Integer, String> sendLibraryEvent_synchApproach(LibraryEvent libraryEvent) throws ExecutionException, InterruptedException, TimeoutException {
 
-        var key= libraryEventDTO.libraryEventId();
-        var value = objectMapper.writeValueAsString(libraryEventDTO);
+        var key= libraryEvent.libraryEventId();
+        var value = objectMapper.writeValueAsString(libraryEvent);
 
         // 1- Blocking call - to get metadata about the kafka cluster
         // 2- Block and wait until the message is sent to the Kafka topic
@@ -99,13 +94,13 @@ public class LiveEventsProducer {
         handleSuccess(key,value, sendResult);
         return sendResult;
 
-    }
+    }*/
 
     private void handleSuccess(Integer key, String value, SendResult<Integer, String> sendResult) {
         log.info("Message sent Successfully for the key: {} and the value: {} , partition is {} ", key,value,sendResult.getRecordMetadata().partition());
     }
 
     private void handleFailure(Integer key, String value, Throwable throwable) {
-        log.error("Error sending the mesage and the exception is {} ", throwable.getMessage(), throwable);
+        log.error("Error sending the message [key: {}, value: {}] and the exception is {} ",key,value, throwable.getMessage(), throwable);
     }
 }

@@ -1,7 +1,7 @@
 package com.learnkafka.controller;
 
 import com.learnkafka.domain.EventType;
-import com.learnkafka.domain.LibraryEventDTO;
+import com.learnkafka.domain.LibraryEvent;
 import com.learnkafka.util.TestUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,8 +45,9 @@ class LibraryEventsControllerIntegrationTest {
                 .body(libraryEvent)  // ← Direto, sem HttpEntity!
                 .exchange()
                 .expectStatus().isCreated()  // ← 201 automático
-                .expectBody(LibraryEventDTO.class)
+                .expectBody(LibraryEvent.class)
                 .value(event -> {
+                    assert event != null;
                     assertEquals(EventType.NEW, event.libraryEventType());
                     // mais asserts se quiseres
                 });
